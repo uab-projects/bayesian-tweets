@@ -1,8 +1,10 @@
 # Libraries
 import logging
+import numpy as np
 import csv
 import sys
 from .CrossValidationSplitter import CrossValidationSplitter
+from .StratifiedCrossValidationSplitter import StratifiedCrossValidationSplitter
 
 # Constants
 logging.basicConfig(level=logging.DEBUG)
@@ -42,28 +44,60 @@ def generateData():
         LOGGER.warning("We don't have %d examples, just %d",DATA_SIZE,examples)
     return data
 
+"""
+Converts data to NumPy
+"""
+def toNumPy(data):
+    messages = np.array([row[1].strip().split(" ") for row in data])
+    classes = np.array([row[2] for row in data])
+    return messages, classes
+
+"""
+Given a list of generated datasets, prints information about them
+"""
+def printDatasets(datasets):
+    LOGGER.info("      Generated %d T/V sets",len(datasets))
+    i=1
+    trainingPercents = [0.,0.]
+    validationPercents = [0.,0.]
+    k = len(datasets)
+    for dataset in datasets:
+        LOGGER.info("      -> D[%02d]:",i)
+        training, validation = dataset[0],dataset[1]
+        trainingC, validationC = [row[2] for row in training],[row[2] for row in validation]
+        trainingPercent = trainingC.count(True)/len(trainingC)*100,trainingC.count(False)/len(trainingC)*100
+        LOGGER.info("      ---> Training:   %d elements, classes (%02.2f%%P%02.2f%%N)",
+        len(training),trainingPercent[0], trainingPercent[1])
+        validationPercent = validationC.count(True)/len(validationC)*100,validationC.count(False)/len(validationC)*100
+        LOGGER.info("      ---> Validation: %d elements, classes (%02.2f%%P%02.2f%%N)",
+        len(validation),validationPercent[0], validationPercent[1])
+        i+=1
+        trainingPercents = [sum(x) for x in zip(trainingPercent, trainingPercents)]
+        validationPercents = [sum(x) for x in zip(validationPercent, validationPercents)]
+    LOGGER.info("      Training set mean distribution: %.02f%% / %.2f%%",trainingPercents[0]/k,trainingPercents[1]/k)
+    LOGGER.info("      Validation set mean distribution: %.02f%% / %.2f%%",validationPercents[0]/k,validationPercents[1]/k)
 # Start test
 if __name__ == "__main__":
     LOGGER.info("Testing splitter module")
     data = generateData()
     LOGGER.info("Generated random data")
     LOGGER.info("Data contains %d rows and %d cols",len(data),len(data[0]))
+    toNumPy(data)
     LOGGER.info("Testing filters...")
     LOGGER.info(" -> cross-Validation")
     cvFilter = CrossValidationSplitter(data)
     LOGGER.info(" ---> k = 4")
     cvFilter.k = 4
-    datasets = cvFilter()
-    LOGGER.info("      Generated %d T/V sets",len(datasets))
-    LOGGER.info("      %s",list(map(lambda tv: "T%dV%d"%(len(list(tv[0])),len(tv[1])),datasets)))
+    printDatasets(cvFilter())
     LOGGER.info(" ---> k = 6")
     cvFilter.k = 6
-    datasets = cvFilter()
-    LOGGER.info("      Generated %d T/V sets",len(datasets))
-    LOGGER.info("      %s",list(map(lambda tv: "T%dV%d"%(len(list(tv[0])),len(tv[1])),datasets)))
+    printDatasets(cvFilter())
     LOGGER.info(" ---> k = 11 (discarding)")
     cvFilter.k = 11
     cvFilter.discard = True
-    datasets = cvFilter()
-    LOGGER.info("      Generated %d T/V sets",len(datasets))
-    LOGGER.info("      %s",list(map(lambda tv: "T%dV%d"%(len(list(tv[0])),len(tv[1])),datasets)))
+    printDatasets(cvFilter())
+    LOGGER.info(" -> stratified cross-Validation")
+    cvsFilter = StratifiedCrossValidationSplitter(data)
+    LOGGER.info(" ---> k = 4")
+    cvsFilter.k = 11
+    printDatasets(cvsFilter())

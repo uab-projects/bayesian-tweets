@@ -73,7 +73,7 @@ class CrossValidationSplitter(DataSplitter):
     """
     Shuffles the data
     """
-    def __shuffle(self):
+    def _shuffle(self):
         random.shuffle(self._data)
 
     """
@@ -85,7 +85,7 @@ class CrossValidationSplitter(DataSplitter):
     """
     def __call__(self):
         # Shuffling
-        self.__shuffle()
+        self._shuffle()
         # Convert k-groups into number of rows
         rowsPerGroup = len(self._data) // self._k
         # Generate groups
@@ -104,7 +104,7 @@ class CrossValidationSplitter(DataSplitter):
             # Join groups
             mixedGroups = list(groups)
             mixedGroups.pop(i)
-            mixedGroup = itertools.chain.from_iterable(mixedGroups)
+            mixedGroup = list(itertools.chain.from_iterable(mixedGroups))
             datasets.append((mixedGroup,groups[i]))
         # Return
         return datasets
