@@ -1,6 +1,5 @@
 import csv
 import logging
-import numpy as np
 
 from .constants import *
 
@@ -24,7 +23,7 @@ class csvReader(object):
 		with open(filename, 'r') as csvfile:
 			cfile = csv.reader(csvfile, delimiter=deli)
 			for row in cfile:
-				self._tweets.append([row[1].strip(),row[3],row[0]])
+				self._tweets.append([row[0],row[1].strip(),row[3]])
 		LOGGER.debug("File has been completely read.")
 
 	"""
@@ -32,12 +31,12 @@ class csvReader(object):
 	def read(self):
 		self._readFile(CSV_FILE, CSV_DELIMITER)
 		self.cutTweets()
-		self.separateTweets()
-		self._parse()
-		self.getDics()
-		self.countPosNeg(self._tweets)
-		self.countPosNeg(self._validate)
-		self.evaluate()
+		#self.separateTweets()
+		#self._parse()
+		#self.getDics()
+		#self.countPosNeg(self._tweets)
+		#self.countPosNeg(self._validate)
+		#self.evaluate()
 
 
 	"""
@@ -46,22 +45,20 @@ class csvReader(object):
 		# possitive meaning
 		for tweet in self._posTweets:
 			for word in tweet[0].split(' '):
-				if (word not in FILTER) and ('#' not in word) and ('@' not in word) and ('http' not in word):
-					if word in self._posDic.keys():
-						self._posDic[word][0] +=  1
-						self._posDic[word][1].append(tweet[2])
-					else:
-						self._posDic[word] = [1,[tweet[2]]]
+				if word in self._posDic.keys():
+					self._posDic[word][0] +=  1
+					self._posDic[word][1].append(tweet[2])
+				else:
+					self._posDic[word] = [1,[tweet[2]]]
 
 		# negative meaning
 		for tweet in self._negTweets:
 			for word in tweet[0].split(' '):
-				if (word not in FILTER) and ('#' not in word) and ('@' not in word) and ('http' not in word):
-					if word in self._negDic.keys():
-						self._negDic[word][0] +=  1
-						self._negDic[word][1].append(tweet[2])
-					else:
-						self._negDic[word] = [1,[tweet[2]]]
+				if word in self._negDic.keys():
+					self._negDic[word][0] +=  1
+					self._negDic[word][1].append(tweet[2])
+				else:
+					self._negDic[word] = [1,[tweet[2]]]
 
 	"""
 	"""
@@ -115,5 +112,5 @@ class csvReader(object):
 
 	"""
 	"""
-	def _filter():
-		pass
+	def getTweets(self):
+		return self._tweets
