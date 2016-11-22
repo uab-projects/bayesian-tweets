@@ -12,6 +12,7 @@ from cli.arguments.parser import DEFAULT_PARSER
 from cli.arguments.constants import *
 
 from core.data.csvReader import *
+from core.data.filterTweets import *
 
 #Constants
 LOGGER = logging.getLogger(__name__)
@@ -46,4 +47,6 @@ if __name__ == "__main__":
 	LOGGER.info("Welcome !")
 	csv = csvReader()
 	csv.read()
+	info = FilterTweets(csv.getTweets())
+	info.filter()
 	LOGGER.info("Bye !")
