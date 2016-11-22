@@ -14,8 +14,7 @@ class csvReader(object):
 
 	def __init__(self):
 		self._tweets = []
-		self._posDic = {}
-		self._negDic = {}
+		self._wordDic={}
 		self._posTweets = []
 		self._negTweets = []
 
@@ -43,25 +42,22 @@ class csvReader(object):
 	"""
 	"""
 	def _parse(self):
-		# possitive meaning
-		for tweet in self._posTweets:
-			for word in tweet[0].split(' '):
-				if (word not in FILTER) and ('#' not in word) and ('@' not in word) and ('http' not in word):
-					if word in self._posDic.keys():
-						self._posDic[word][0] +=  1
-						self._posDic[word][1].append(tweet[2])
-					else:
-						self._posDic[word] = [1,[tweet[2]]]
 
-		# negative meaning
-		for tweet in self._negTweets:
-			for word in tweet[0].split(' '):
-				if (word not in FILTER) and ('#' not in word) and ('@' not in word) and ('http' not in word):
-					if word in self._negDic.keys():
-						self._negDic[word][0] +=  1
-						self._negDic[word][1].append(tweet[2])
-					else:
-						self._negDic[word] = [1,[tweet[2]]]
+		for tweet in self._tweets:
+			# possitive meaning
+			if tweet[2]:
+				for word in tweet[1].split(' '):
+						if word in self._wordDic.keys():
+							self._wordDic[word][1]+=1
+						else:
+							self._wordDic[word] = [0,1]
+			# negative meaning
+			else:
+				if word in self._wordDic.keys():
+					self._wordDic[word][0]+=1
+				else:
+					self._wordDic[word] = [1,0]
+
 
 	"""
 	"""
@@ -98,7 +94,7 @@ class csvReader(object):
 	def countPosNeg(self, l):
 		pos, neg = 0,0
 		for row in l:
-			if int(row[1]):
+			if int(row[2]):
 				pos += 1
 			else:
 				neg += 1
