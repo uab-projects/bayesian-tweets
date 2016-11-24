@@ -3,6 +3,10 @@ import numpy as np
 import logging
 
 from .constants import *
+from core.filters.lexical import *
+from core.filters.twitter import *
+from core.filters.type import *
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -11,7 +15,6 @@ class FilterTweets(object):
 
 	def __init__(self, tweets):
 		self._rawTweets = tweets
-
 		self._fTweets = []
 
 	"""
@@ -29,7 +32,7 @@ class FilterTweets(object):
 			LOGGER.debug("message before filtering: %s"%message)
 
 			for word in message.split(' '):
-				if self.isValidWord(word):
+				if self.isValidWord(word,flags):
 					useful_words.append(word)
 
 			fmessage = " ".join(useful_words)
@@ -39,28 +42,10 @@ class FilterTweets(object):
 		LOGGER.debug("Filtering stage complete.")
 
 	def isValidWord(self, word):
-		if word in FILTER:
+		if word in GLOBAL_FILTER:
 			return False
-		elif self.isPronoun(word):
+		elif not isPronoun(word):
 			return False
-		elif self.isStrangeWord(word):
+		elif not isStrangeWord(word):
 			return False
 		return True
-
-	def isStrangeWord(self, word):
-		if 'http' in word:
-			return True
-		if '@' in word:
-			return True
-		if '#' in word:
-			return True
-		return False
-
-	def isPronoun(self, word):
-		if word in PERSONAL_PRONOUNS:
-			return True
-		elif word in RELATIVE_PRONOUNS:
-			return True
-		elif word in POSSESSIVE_PRONOUNS:
-			return True
-		return False
