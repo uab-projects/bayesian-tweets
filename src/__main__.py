@@ -68,7 +68,7 @@ def setData():
 """
 Filters the data and returns the filtered data
 """
-def setFilteredData():
+def appplyFilters():
 	global data
 	filterer = FilterTweets(data)
 	filterer.filter()
@@ -92,5 +92,5 @@ if __name__ == "__main__":
 	setData()
 
 	# Filtering
-	setFilteredData()
+	applyFilters()
 	LOGGER.info("Bye!")
