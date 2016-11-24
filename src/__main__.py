@@ -11,8 +11,11 @@ import core.log
 from cli.arguments.parser import DEFAULT_PARSER
 from cli.arguments.constants import *
 
-from core.data.CSVReader import *
-from core.data.filterTweets import *
+from core.readers.CSVReader import CSVReader
+from core.data.DataNp import DataNp
+from core.filters import lexical
+from core.filters import types
+from core.filters.DataFilter import DataFilter
 
 #Constants
 LOGGER = logging.getLogger(__name__)
@@ -66,12 +69,29 @@ def setData():
 	data = reader.data
 
 """
+Reduces the data size to improve debugging
+"""
+def reduceData():
+	global data
+	if args.n_samples > 0:
+		LOGGER.info("Reducing data to %d elements",args.n_samples)
+		data = data[:args.n_samples]
+
+"""
+Converts data into NumPy format
+"""
+def convertData():
+	global data
+	data_transformer = DataNp(data)
+	data = data_transformer()
+
+"""
 Filters the data and returns the filtered data
 """
-def appplyFilters():
+def applyFilters():
 	global data
-	filterer = FilterTweets(data)
-	filterer.filter()
+	filterer = DataFilter(data)
+	filterer([lexical.isCorrect,types.isNotInteger])
 	data = filterer.data
 
 if __name__ == "__main__":
@@ -90,7 +110,13 @@ if __name__ == "__main__":
 	# Get input data
 	setDataFile()
 	setData()
+	reduceData()
+
+	# Convert to numpy
+	convertData()
 
 	# Filtering
 	applyFilters()
+
+	# Exit
 	LOGGER.info("Bye!")

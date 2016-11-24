@@ -22,6 +22,9 @@ DEMONSTRATIVE_PRONOUNS = ['this', 'these', 'that', 'those']
 
 #REFLEXIVE_PRONOUNS = []
 
+def isCorrect(word):
+	return isNotLink(word) and isNotPronoun(word) and isNotASymbol(word)
+
 def isNotLink( word):
 	if word.startswith('http'):
 		return False
@@ -30,12 +33,12 @@ def isNotLink( word):
 def isNotPronoun(word):
 	if word in PERSONAL_PRONOUNS:
 		return False
-	elif word in RELATIVE_PRONOUNS:
-		return False
+	#elif word in RELATIVE_PRONOUNS:
+	#	return False
 	elif word in POSSESSIVE_PRONOUNS:
 		return False
-    elif word in INTERROGATIVE_PRONOUNS:
-        return False
+    #elif word in INTERROGATIVE_PRONOUNS:
+    #    return False
 	return True
 
 def isNotASymbol(word):

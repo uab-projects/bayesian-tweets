@@ -38,6 +38,7 @@ DEFAULT_PARSER.add_argument("data_file",
 )
 
 DEFAULT_PARSER.add_argument("-n","--n-samples",
+	metavar="samples_number",
 	action="store",
 	help="number of items from the data loaded to analyze (starting from the begining), useful for debugging. If %d, all data is taken (default is %d)"%(N_SAMPLES_ALL,N_SAMPLES_DEFAULT),
 	type=int,
