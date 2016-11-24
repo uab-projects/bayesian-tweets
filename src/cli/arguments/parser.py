@@ -28,3 +28,11 @@ DEFAULT_PARSER.add_argument("-l","--log-level",
 	choices=LOGS,
 	default=LOG_DEFAULT
 )
+# About the input
+DEFAULT_PARSER.add_argument("data_file",
+	action="store",
+	nargs="?",
+	help="the file containing data to process",
+	type=str,
+	default=FILE_IN_DEFAULT
+)

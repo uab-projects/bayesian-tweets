@@ -14,6 +14,13 @@ class FilterTweets(object):
 
 		self._fTweets = []
 
+	"""
+	Returns the filtered data
+	"""
+	@property
+	def data(self):
+		return self._fTweets
+
 	def filter(self):
 		LOGGER.debug("Attempting to filter n tweets")
 		for tweet in self._rawTweets:

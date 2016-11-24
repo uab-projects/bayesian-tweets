@@ -1,5 +1,10 @@
 
-#Log level
+# About input
+"""
+Default input file
+"""
+FILE_IN_DEFAULT = "res/tweets/FinalStemmedSentimentAnalysisDataset.csv"
+# Log level
 """
 Default log level
 """
