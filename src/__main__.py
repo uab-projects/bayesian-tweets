@@ -113,6 +113,9 @@ def applyFilters():
 		np_data.addFilter(lexical.recommended)
 	if args.filter_twitter:
 		np_data.addFilter(twitter.recommended)
+	if not len(np_data.filter_list):
+		LOGGER.info("FILT_DATA: No filters applied")
+		return
 	LOGGER.info("FILT_DATA: Starting to apply filters")
 	words_before = np_data.n_words
 	np_data.applyFilters()

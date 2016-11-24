@@ -24,22 +24,13 @@ class NpDataFilter(NpDataHandler):
 	the filter list
 	"""
 	def applyFilters(self):
-		LOGGER.debug("Attempting to filter n tweets")
+		LOGGER.debug("Attempting to filter %d tweets",self._n_samples)
 		for message in self._messages:
-			LOGGER.debug("message before filtering: %s"%message)
-			for word in message:#.split(' '):
-				if not self.isValidWord(word):
+			for word in message:
+				if not all(f(word) for f in self._filter_list):
 					message.remove(word)
-			#message = list(filter(self.isValidWord,message))
-			LOGGER.debug("Message after filtering: %s"%message)
 		LOGGER.debug("Filtering stage complete.")
 		self._updateCounts()
-
-	def isValidWord(self, word):
-		for f in self._filter_list:
-			if not f(word):
-				return False
-		return True
 
 	"""
 	Returns the filters set to filter the data as a list
