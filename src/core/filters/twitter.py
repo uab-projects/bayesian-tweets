@@ -1,25 +1,27 @@
+# Constants
+_MENTION_CHAR = '@'
+_HASHTAG_CHAR = '#'
+_RT_STR = 'rt'
 
-# Global function
-def isNotTwitterArgot(word):
-	if hasNotMentions(word):
-		return False
-	if hastNotRT(word):
-		return False
-	if hastNotHashtags(word):
-		return False
-	return True
+# Global functions
+def recommended(word):
+	return hasNotMentions(word) and hasNotRT(word) and hasNotHashtags(word)
 
+# Specific filters
 def hasNotMentions(word):
-	if word.startswith('@'):
-		return False
-	return True
+	"""
+	Just allows words without @mentions. Any word starting with @ will be deleted
+	"""
+	return word[0] !=_MENTION_CHAR
 
 def hasNotRT(word):
-	if 'rt' in word:
-		return False
-	return True
+	"""
+	Just allows words without retweet symbols, any word with RT or something similar will be deleted
+	"""
+	return word != _RT_STR
 
 def hasNotHashtags(word):
-	if word.startswith('#'):
-		return False
-	return True
+	"""
+	Just allows words without hashtags
+	"""
+	return word[0] != _HASHTAG_CHAR

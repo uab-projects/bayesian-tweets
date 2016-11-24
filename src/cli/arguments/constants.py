@@ -11,6 +11,26 @@ Default number of data samples to take
 N_SAMPLES_ALL = 0
 N_SAMPLES_DEFAULT = N_SAMPLES_ALL
 
+"""
+Shows information about the read data before getting converted
+"""
+SHOW_DATA_PRE_DEFAULT = False
+
+"""
+Shows information about the read data after being converted
+"""
+SHOW_DATA_INPUT_DEFAULT = False
+
+"""
+Shows information about the filtered data
+"""
+SHOW_DATA_FILTER_DEFAULT = False
+
+"""
+Shows information about the read and filtered data
+"""
+SHOW_DATA_DEFAULT = False
+
 # Log level
 """
 Default log level

@@ -1,3 +1,4 @@
+# Constants
 """
 Words not useful for classification
 """
@@ -22,7 +23,7 @@ DEMONSTRATIVE_PRONOUNS = ['this', 'these', 'that', 'those']
 
 #REFLEXIVE_PRONOUNS = []
 
-def isCorrect(word):
+def recommended(word):
 	return isNotLink(word) and isNotPronoun(word) and isNotASymbol(word)
 
 def isNotLink( word):

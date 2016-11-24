@@ -1,7 +1,7 @@
 # Libraries
 import csv
 import logging
-from core.data.DataHandler import DataHandler
+from core.data.RawDataHandler import RawDataHandler
 
 
 # Constants
@@ -20,7 +20,7 @@ CSV_FILE        = "res/tweets/FinalStemmedSentimentAnalysisDataset.csv"
 """
 Reads a comma-separated-like file and returns the data in it
 """
-class CSVWriter(DataHandler):
+class CSVWriter(RawDataHandler):
 	"""
 	@attr 	_filename	the file to read
 	@attr	_data 		the data read
