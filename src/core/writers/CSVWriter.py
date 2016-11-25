@@ -15,7 +15,7 @@ CSV_DELIMITER   = ";"
 """
 CSV filename
 """
-CSV_FILE        = "res/tweets/FinalStemmedSentimentAnalysisDataset.csv"
+CSV_FILE        = "res/tweets/SentimentAnalysis.csv"
 
 """
 Reads a comma-separated-like file and returns the data in it
@@ -36,7 +36,7 @@ class CSVWriter(RawDataHandler):
 		self._filename = filename
 		self._data = None
 
-	def _readFile(self):
+	def _writeFile(self):
 		LOGGER.debug("Attempting to read file: %s."%self._filename)
 		self._data = []
 		with open(self._filename, 'r') as csvfile:
@@ -48,5 +48,5 @@ class CSVWriter(RawDataHandler):
 	"""
 	Reads the file
 	"""
-	def read(self):
-		self._readFile()
+	def write(self):
+		self._writeFile()

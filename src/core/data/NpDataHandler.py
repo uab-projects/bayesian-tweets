@@ -13,8 +13,9 @@ class NpDataHandler(object):
 	@attr   _classes 		vector containing the class for each message
 	@attr 	_n_samples 		number of samples
 	@attr 	_n_words 		number of words in the samples
+	@attr 	_n_classes		number of classes to classify the samples
 	"""
-	__slots__ = ["_messages","_classes","_n_samples","_n_words"]
+	__slots__ = ["_messages","_classes","_n_samples","_n_words","_n_classes"]
 	__metaclass__ = ABCMeta
 
 	"""
@@ -39,6 +40,10 @@ class NpDataHandler(object):
 		# calculate sizes
 		self._n_samples = self._messages.shape[0]
 		self._n_words = sum(len(m) for m in self._messages)
+		if self._classes.dtype == bool:
+			self._n_classes = 2
+		else:
+			self._n_classes = len(set(m) for m in self._classes)
 
 	"""
 	Initialiazes a new NumPy data handler from an existing NumPy Data Handler
@@ -84,6 +89,15 @@ class NpDataHandler(object):
 		return self._n_words
 
 	"""
+	Returns the number of classes of the data
+
+	@return 	number of samples
+	"""
+	@property
+	def n_classes(self):
+		return self._n_classes
+
+	"""
 	Returns the data saved to process or transform, as a tuple containing messages and classes
 
 	@return	 tuple with messages and classes
@@ -103,4 +117,5 @@ class NpDataHandler(object):
 		txt += "-------------------------------------------------------------\n"
 		txt += " SAMPLES: %d\n"%(self._n_samples)
 		txt += " WORDS:   %d\n"%(self._n_words)
+		txt += " CLASSES: %d\n"%(self._n_classes)
 		return txt
