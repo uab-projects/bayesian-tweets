@@ -17,6 +17,8 @@ from core.filters import lexical
 from core.filters import types
 from core.filters import twitter
 from core.filters.NpDataFilter import NpDataFilter
+from core.learner.NaiveBayesLearner import NaiveBayesLearner
+from core.classifier.NaiveBayesClassifier import NaiveBayesClassifier
 
 #Constants
 LOGGER = logging.getLogger(__name__)
@@ -179,6 +181,21 @@ def main():
 
 	# Generate training and validation sets
 	generateDatasets()
+
+	# Loop datasets and evaluate
+	LOGGER.info(" CLASSIFY: Starting learn and classification")
+	i = 1
+	for dataset in datasets:
+		LOGGER.info("    I[%02d]: Starting iteration",i)
+		trainingSet, validationSet = dataset
+		learn = NaiveBayesLearner(trainingSet)
+		learn()
+		classifier = NaiveBayesClassifier(learn)
+		cunfuciu = classifier.classifySet(validationSet)
+		print(cunfuciu)
+		LOGGER.info("    I[%02d]: Finished iteration",i)
+		i+=1
+	LOGGER.info(" CLASSIFY: Finished")
 
 	# Exit
 	LOGGER.info("Bye!")

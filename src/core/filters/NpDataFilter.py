@@ -30,7 +30,7 @@ class NpDataFilter(NpDataHandler):
 				if not all(f(word) for f in self._filter_list):
 					message.remove(word)
 		LOGGER.debug("Filtering stage complete.")
-		self._updateCounts()
+		self.updateCounts()
 
 	"""
 	Returns the filters set to filter the data as a list

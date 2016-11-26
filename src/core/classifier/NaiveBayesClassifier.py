@@ -31,7 +31,7 @@ class NaiveBayesClassifier(object):
 		"""
 		return self.classifyMessage(msg)
 
-	def classifySet(validationSet):
+	def classifySet(self, validationSet):
 		"""
 		Given a validation set, classifies all messages in the validation sets and calculates the confusion matrix for all the classifications
 
@@ -40,16 +40,16 @@ class NaiveBayesClassifier(object):
 		"""
 		# Confusion Matrix and data
 		confusionMatrix = BinaryConfusionMatrix()
-		messages, classes = validationSet.messages, vSet.classes
+		messages, classes = validationSet.messages, validationSet.classes
 
 		# Loop and classify
 		for i in range(validationSet.n_samples):
 			predicted = self.classifyMessage(messages[i])
-			confusionMatrix.addClassification(predicted, classes[i])
+			confusionMatrix.addClassification(classes[i], predicted)
 
 		return confusionMatrix
 
-	def classifyMessage(msg):
+	def classifyMessage(self, msg):
 		"""
 		Given a message, classifies the message according to the data learned and returns the classification for the message
 
@@ -59,16 +59,24 @@ class NaiveBayesClassifier(object):
 		# Initialize vars
 		classifiedClass = None
 		classifiedProb = float("-inf")
+		classes = 2
 		# Check classes
-		for clazz in range(vSet.n_classes):
+		for clazz in range(classes):
 			# Calculate probability
 			prob = 0.
-			for word in tweet:
-				prob += math.log(self._learner.wordDic[word][clazz+vSet.n_classes])
+			for word in msg:
+				wordInfo = None
+				try:
+					wordInfo = self._learner.wordDic[word]
+				except:
+					pass
+				if wordInfo == None or wordInfo[clazz+classes] == 0:
+					prob += 0
+				else:
+					prob += math.log(wordInfo[clazz+classes])
 			prob *= self._learner.classes_prob[clazz]
 			# Check if maximum
 			if prob > classifiedProb:
 				classifiedClass = clazz
 				classifiedProb = prob
-
 		return classifiedClass

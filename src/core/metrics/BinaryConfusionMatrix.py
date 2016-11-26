@@ -17,4 +17,4 @@ class BinaryConfusionMatrix(ConfusionMatrix):
 		@param 	_real		real value classification
 		@param  _predicted	predicted value classification
 		"""
-		self._matrix[real][predicted] += 1
+		self._matrix[int(real)][int(predicted)] += 1

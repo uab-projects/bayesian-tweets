@@ -27,7 +27,7 @@ class ConfusionMatrix(object):
 
 		@return 	true positives number
 		"""
-		return self._matrix[True][True]
+		return self._matrix[int(True)][int(True)]
 
 	@property
 	def trueNegatives(self):
@@ -36,7 +36,7 @@ class ConfusionMatrix(object):
 
 		@return 	true negatives number
 		"""
-		return self._matrix[False][False]
+		return self._matrix[int(False)][int(False)]
 
 	@property
 	def falsePositives(self):
@@ -45,7 +45,7 @@ class ConfusionMatrix(object):
 
 		@return 	false positives number
 		"""
-		return self._matrix[False][True]
+		return self._matrix[int(False)][int(True)]
 
 	@property
 	def falseNegatives(self):
@@ -54,7 +54,7 @@ class ConfusionMatrix(object):
 
 		@return 	false negatives number
 		"""
-		return self._matrix[True][False]
+		return self._matrix[int(True)][int(False)]
 
 	@property
 	def items(self):
@@ -73,7 +73,24 @@ class ConfusionMatrix(object):
 		@return 	accuracy metric
 		"""
 
-		return self.truePositives + self.trueNegatives / self.items
+		return (self.truePositives + self.trueNegatives) / self.items
+
+	def __str__(self):
+		"""
+		Prints a representation of the confusion matrix
+
+		@return  string representation
+		"""
+		txt =  "-------------------------------------------------------------\n"
+		txt += " %s Information\n"%(self.__class__.__name__)
+		txt += "-------------------------------------------------------------\n"
+		txt += "            |   Predicted   |\n"
+		txt += "            | False | True  |\n"
+		txt += " Re | False | %05d | %05d |\n" % (self.trueNegatives, self.falsePositives)
+		txt += " al | True  | %05d | %05d |\n" % (self.falseNegatives, self.truePositives)
+		txt += " --> Accuracy: %0.8f\n"%(self.accuracy)
+
+		return txt
 
 
 """

@@ -19,10 +19,10 @@ class NaiveBayesLearner(object):
 		self._createDic()
 		for clazz in range(self._data.n_classes):
 			# Calculate class probability
-			class_len = np.sum(self._data.classes)
+			classLen = np.sum(self._data.classes)
 			if not clazz:
-				class_len = self._data.n_classes - clazz_len
-			self._classes_prob.append(class_len / self._data.n_samples)
+				classLen = self._data.n_samples - classLen
+			self._classes_prob[clazz] = classLen / self._data.n_samples
 
 			for word, values in self._wordDic.items():
 				values[clazz+self._data._n_classes] = (values[clazz] + 1) /(self._n_words[clazz] + self._n_wordsUnique[clazz])

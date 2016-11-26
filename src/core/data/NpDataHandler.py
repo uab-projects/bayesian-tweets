@@ -30,12 +30,12 @@ class NpDataHandler(object):
 		# set messages and classes
 		self._messages = messages
 		self._classes = classes
-		self._updateCounts()
+		self.updateCounts()
 
 	"""
 	Updates the number of samples and words, if messages have changed
 	"""
-	def _updateCounts(self):
+	def updateCounts(self):
 		# calculate sizes
 		self._n_samples = self._messages.shape[0]
 		self._n_words = sum(len(m) for m in self._messages)
@@ -112,14 +112,16 @@ class NpDataHandler(object):
 		summed = NpDataHandler.fromNpDataHandler(self)
 		np.append(summed.messages, obj.messages)
 		np.append(summed.classes, obj.classes)
+		summed.updateCounts()
 		return summed
 
 	"""
 	Returns the sumatory of two NumPy data handlers, saving the result in the current object
 	"""
 	def __iadd__(self, obj):
-		np.append(self._messages, obj.messages)
-		np.append(self._classes, obj.classes)
+		self._messages = np.append(self._messages, obj.messages)
+		self._classes = np.append(self._classes, obj.classes)
+		self.updateCounts()
 		return self
 
 	"""
@@ -132,6 +134,9 @@ class NpDataHandler(object):
 		txt += " %s Information\n"%(self.__class__.__name__)
 		txt += "-------------------------------------------------------------\n"
 		txt += " SAMPLES: %d\n"%(self._n_samples)
-		txt += " WORDS:   %d\n"%(self._n_words)
 		txt += " CLASSES: %d\n"%(self._n_classes)
+		txt += " WORDS:   %d (%.2f%% positive, %.2f%% negative)\n"%(self._n_words,
+			(np.sum(self._classes)/self._n_samples)*100,
+			100-(np.sum(self._classes)/self._n_samples)*100
+		)
 		return txt
