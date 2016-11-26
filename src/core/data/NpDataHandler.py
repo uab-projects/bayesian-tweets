@@ -1,5 +1,5 @@
 # Libraries
-from abc import ABCMeta
+import numpy as np
 
 """
 Defines a class that will transform or process data in NumPy format, this means
@@ -16,7 +16,6 @@ class NpDataHandler(object):
 	@attr 	_n_classes		number of classes to classify the samples
 	"""
 	__slots__ = ["_messages","_classes","_n_samples","_n_words","_n_classes"]
-	__metaclass__ = ABCMeta
 
 	"""
 	Initializes the data object with the messages and its classes
@@ -24,7 +23,7 @@ class NpDataHandler(object):
 	@param 	messages 	numpy vector of messages (each message as list of strings)
 	@param 	classes 	numpy vector of classes (each item matches the same row in messages' class)
 	"""
-	def __init__(self, messages, classes):
+	def __init__(self, messages=np.array([],dtype=object), classes=np.array([],dtype=bool)):
 		# Check vectors of same size
 		assert len(messages.shape) == len(classes.shape) == 1, "A NumPy data handler must handle just vectors, not matrixes in its messages and classes"
 		assert messages.shape[0] == classes.shape[0], "NumPy Data Handler messages and classes must have same number of items (to match each message to a class)"
@@ -105,6 +104,23 @@ class NpDataHandler(object):
 	@property
 	def data(self):
 		return self._messages, self._classes
+
+	"""
+	Returns the sumatory of two NumPy data handlers
+	"""
+	def __add__(self, obj):
+		summed = NpDataHandler.fromNpDataHandler(self)
+		np.append(summed.messages, obj.messages)
+		np.append(summed.classes, obj.classes)
+		return summed
+
+	"""
+	Returns the sumatory of two NumPy data handlers, saving the result in the current object
+	"""
+	def __iadd__(self, obj):
+		np.append(self._messages, obj.messages)
+		np.append(self._classes, obj.classes)
+		return self
 
 	"""
 	Prints a representation of the data stored

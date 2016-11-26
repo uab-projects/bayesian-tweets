@@ -5,8 +5,8 @@ import itertools
 
 # constants
 K_MIN = 2
-K_DEF = K_MIN
-K_MAX = 50
+K_DEF = 3
+K_MAX = 500
 DISCARD_DEFAULT = False
 
 """

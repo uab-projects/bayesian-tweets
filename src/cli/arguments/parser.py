@@ -85,6 +85,21 @@ DEFAULT_PARSER.add_argument("--show-data",
 	const=True,
 	default=SHOW_DATA_DEFAULT
 )
+# About splitters
+DEFAULT_PARSER.add_argument("-s","--splitter",
+	action="store",
+	help="splitter method to use in order to generate from filtered data one or more training and validation sets. Default is %s"%(SPLITTER_DEFAULT),
+	type=str,
+	choices=SPLITTERS_NAMES,
+	default=SPLITTER_DEFAULT
+)
+DEFAULT_PARSER.add_argument("-k",
+	action="store",
+	metavar="groups",
+	help="number of groups to generate in cross-validation splitter. Default is %d"%SPLITTER_CV_K_DEFAULT,
+	type=int,
+	default=SPLITTER_CV_K_DEFAULT,
+)
 # About filters
 DEFAULT_PARSER.add_argument("--filter-lexical",
 	action="store_true",

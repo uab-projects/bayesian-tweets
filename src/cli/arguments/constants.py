@@ -1,3 +1,5 @@
+# Libraries
+from core.splitter.NpCrossValidationSplitter import NpCrossValidationSplitter
 
 # About input
 """
@@ -30,6 +32,29 @@ SHOW_DATA_FILTER_DEFAULT = False
 Shows information about the read and filtered data
 """
 SHOW_DATA_DEFAULT = False
+
+# About splitters
+"""
+Splitters and the associated classes
+"""
+SPLITTERS = {
+    "cross-validation" : NpCrossValidationSplitter
+}
+
+"""
+Just splitter names
+"""
+SPLITTERS_NAMES = list(SPLITTERS.keys())
+
+"""
+Default splitter name
+"""
+SPLITTER_DEFAULT = SPLITTERS_NAMES[0]
+
+"""
+Default number of groups in cross-validation or stratified cross-validation
+"""
+SPLITTER_CV_K_DEFAULT = 3
 
 # Log level
 """
