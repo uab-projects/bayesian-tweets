@@ -3,7 +3,8 @@ import numpy as np
 
 class ConfusionMatrix(object):
 	"""
-	Represents a Confusion Matrix for a target feature with two possible values, with the methods to add and finally calculate metrics
+	Represents a Confusion Matrix for a target feature with two possible values,
+	with the methods to add and finally calculate metrics
 
 	@attr   _matrix	 matrix where matches will be saved
 						matrix has this format:
@@ -59,7 +60,8 @@ class ConfusionMatrix(object):
 	@property
 	def items(self):
 		"""
-		Number of total classified values in the confusion matrix, equivalent to the sum of all values
+		Number of total classified values in the confusion matrix, equivalent to
+		the sum of all values
 
 		@return 	items classified in the confusion matrix
 		"""
@@ -75,6 +77,80 @@ class ConfusionMatrix(object):
 
 		return (self.truePositives + self.trueNegatives) / self.items
 
+	@property
+	def precision(self):
+		"""
+		Given the values in the matrix, calculates the precision of them
+
+		@return 	precision metric
+		"""
+
+		return self.truePositives/(self.truePositives+self.falsePositives)
+
+	@property
+	def recall(self):
+		"""
+		Given the values in the matrix, calculates the recall metric of them
+
+		@return 	recall metric
+		"""
+
+		return self.truePositives/(self.truePositives+self.falseNegatives)
+
+	@property
+	def specificity(self):
+		"""
+		Given the values in the matrix, calculates the specificity of them
+
+		@return 	specificity metric
+		"""
+
+		return self.trueNegatives/(self.trueNegatives+self.falsePositives)
+
+	@property
+	def f_Measure(self):
+		"""
+		Given the values in the matrix, calculates the F-Measure metric of them
+
+		@return 	F-Measure metric
+		"""
+
+		return (2*self.precision*self.recall)/(self.precision+self.recall)
+
+	@property
+	def FDR(self):
+		"""
+		Given the values in the matrix, calculates the False Discovery Rate
+		metric of them
+
+		@return 	False Discovery Rate metric
+		"""
+
+		return 1-self.precision
+
+	@property
+	def miss_Rate(self):
+		"""
+		Given the values in the matrix, calculates the Miss Rate metric of them
+
+		@return 	Miss Rate metric
+		"""
+
+		return 1-self.recall
+
+	@property
+	def fall_out(self):
+		"""
+		Given the values in the matrix, calculates the fall-out metric of them
+
+		@return 	fall-out metric
+		"""
+
+		return 1-self.specificity
+
+
+
+
 	def __str__(self):
 		"""
 		Prints a representation of the confusion matrix
@@ -89,8 +165,16 @@ class ConfusionMatrix(object):
 		txt += " Re | False | %05d | %05d |\n" % (self.trueNegatives, self.falsePositives)
 		txt += " al | True  | %05d | %05d |\n" % (self.falseNegatives, self.truePositives)
 		txt += " --> Accuracy: %0.8f\n"%(self.accuracy)
+		txt += " --> Precision: %0.8f\n"%(self.precision)
+		txt += " --> Recall: %0.8f\n"%(self.recall)
+		txt += " --> Specificity: %0.8f\n"%(self.specificity)
+		txt += " --> F-Measure: %0.8f\n"%(self.f_Measure)
+		txt += " --> False Discovery Rate: %0.8f\n"%(self.FDR)
+		txt += " --> Miss-Rate: %0.8f\n"%(self.miss_Rate)
+		txt += " --> Fall-Out: %0.8f\n"%(self.fall_out)
 
 		return txt
+
 
 
 """
