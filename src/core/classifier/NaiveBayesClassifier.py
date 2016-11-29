@@ -45,7 +45,7 @@ class NaiveBayesClassifier(object):
 		# Loop and classify
 		for i in range(validationSet.n_samples):
 			predicted = self.classifyMessage(messages[i])
-			confusionMatrix.addClassification(classes[i], predicted)
+			confusionMatrix.addClassification(classes[i], predicted[0])
 
 		return confusionMatrix
 
@@ -74,9 +74,10 @@ class NaiveBayesClassifier(object):
 					prob += 0
 				else:
 					prob += math.log(wordInfo[clazz+classes])
-			prob *= self._learner.classes_prob[clazz]
+			prob += math.log(self._learner.classes_prob[clazz])
 			# Check if maximum
 			if prob > classifiedProb:
 				classifiedClass = clazz
 				classifiedProb = prob
-		return classifiedClass
+			print(math.e**prob)
+		return classifiedClass,math.e**classifiedProb

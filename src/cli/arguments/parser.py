@@ -44,6 +44,22 @@ DEFAULT_PARSER.add_argument("-n","--n-samples",
 	type=int,
 	default=N_SAMPLES_DEFAULT
 )
+
+DEFAULT_PARSER.add_argument("-d","--col-data",
+	metavar="n",
+	action="store",
+	help="""number of the column where the data is stored. Default is %d"""%(COL_DATA_DEFAULT),
+	type=int,
+	default=COL_DATA_DEFAULT
+)
+
+DEFAULT_PARSER.add_argument("-t","--col-sentiment",
+	metavar="n",
+	action="store",
+	help="""number of the column where the sentiment classification is stored. Default is %d"""%(COL_SENTIMENT_DEFAULT),
+	type=int,
+	default=COL_SENTIMENT_DEFAULT
+)
 # About the input details
 DEFAULT_PARSER.add_argument("--show-pre-data",
 	metavar="true|false",

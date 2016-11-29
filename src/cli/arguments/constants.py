@@ -8,6 +8,16 @@ Default input file
 FILE_IN_DEFAULT = "res/tweets/FinalStemmedSentimentAnalysisDataset.csv"
 
 """
+Default column of the file where data is hold (text message)
+"""
+COL_DATA_DEFAULT = 2
+
+"""
+Default column of the file where sentimental classification is stored
+"""
+COL_SENTIMENT_DEFAULT = 4
+
+"""
 Default number of data samples to take
 """
 N_SAMPLES_ALL = 0
@@ -38,7 +48,8 @@ SHOW_DATA_DEFAULT = False
 Splitters and the associated classes
 """
 SPLITTERS = {
-    "cross-validation" : NpCrossValidationSplitter
+    "cross-validation" : NpCrossValidationSplitter,
+    "nosplit" : None
 }
 
 """

@@ -25,11 +25,10 @@ class NaiveBayesLearner(object):
 			self._classes_prob[clazz] = classLen / self._data.n_samples
 
 			for word, values in self._wordDic.items():
-				values[clazz+self._data._n_classes] = (values[clazz] + 1) /(self._n_words[clazz] + self._n_wordsUnique[clazz])
+				values[clazz+self._data._n_classes] = (values[clazz]) /(self._n_words[clazz])
 
 	def _createDic(self):
 		for index in range(self._data.n_samples):
-
 			tweet = self._data.messages[index]
 			clazz = self._data.classes[index]
 

@@ -81,12 +81,11 @@ def setData():
 	LOGGER.debug("File type is CSV")
 	inputData = CSVReader(dataFile)
 	try:
-		inputData.read()
+		inputData.read(args.col_data-1,args.col_sentiment-1)
 	except Exception as e:
 		LOGGER.error("Unable to read data file %s (%s)",dataFile,str(e))
 		sys.exit(1)
 	LOGGER.info("READ_FILE: Finished reading data file")
-
 
 def reduceData():
 	"""
@@ -140,6 +139,10 @@ def generateDatasets():
 	Given the splitter method in the arguments, generates the proper training and validation sets
 	"""
 	global datasets
+	if args.splitter == "nosplit":
+		LOGGER.info("DATASET_G: All data will be learning")
+		datasets = [(npData,None)]
+		return
 	# Load class
 	clazz = SPLITTERS[args.splitter]
 	splitter = clazz(npData)
@@ -186,14 +189,31 @@ def main():
 	LOGGER.info(" CLASSIFY: Starting learn and classification")
 	i = 1
 	for dataset in datasets:
-		LOGGER.info("    I[%02d]: Starting iteration",i)
+		if len(datasets) > 1:
+			LOGGER.info("    I[%02d]: Starting iteration",i)
 		trainingSet, validationSet = dataset
+		# Learn
 		learn = NaiveBayesLearner(trainingSet)
 		learn()
+		# Classify
 		classifier = NaiveBayesClassifier(learn)
-		cunfuciu = classifier.classifySet(validationSet)
-		print(cunfuciu)
-		LOGGER.info("    I[%02d]: Finished iteration",i)
+		if args.splitter == "nosplit":
+			# Input by console
+			LOGGER.info("     LIVE: Starting live classifications")
+			LOGGER.info("     LIVE: Press Enter without a message to exit")
+			while True:
+				LOGGER.info("     LIVE: Please, input a text to classify")
+				message = input()
+				if message == "":
+					break;
+				prediction, prob = classifier(message.split(" "))
+				LOGGER.info("     LIVE: Classification is %d with probability %0.2f%%",prediction,prob*100)
+		else:
+			# Confucioor
+			cunfuciu = classifier.classifySet(validationSet)
+			print(cunfuciu)
+		if len(datasets) > 1:
+			LOGGER.info("    I[%02d]: Finished iteration",i)
 		i+=1
 	LOGGER.info(" CLASSIFY: Finished")
 

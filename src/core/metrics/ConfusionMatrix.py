@@ -148,9 +148,6 @@ class ConfusionMatrix(object):
 
 		return 1-self.specificity
 
-
-
-
 	def __str__(self):
 		"""
 		Prints a representation of the confusion matrix
@@ -164,22 +161,13 @@ class ConfusionMatrix(object):
 		txt += "            | False | True  |\n"
 		txt += " Re | False | %05d | %05d |\n" % (self.trueNegatives, self.falsePositives)
 		txt += " al | True  | %05d | %05d |\n" % (self.falseNegatives, self.truePositives)
-		txt += " --> Accuracy: %0.8f\n"%(self.accuracy)
-		txt += " --> Precision: %0.8f\n"%(self.precision)
-		txt += " --> Recall: %0.8f\n"%(self.recall)
-		txt += " --> Specificity: %0.8f\n"%(self.specificity)
-		txt += " --> F-Measure: %0.8f\n"%(self.f_Measure)
+		txt += " --> Accuracy:             %0.8f\n"%(self.accuracy)
+		txt += " --> Precision:            %0.8f\n"%(self.precision)
+		txt += " --> Recall:               %0.8f\n"%(self.recall)
+		txt += " --> Specificity:          %0.8f\n"%(self.specificity)
+		txt += " --> F-Measure:            %0.8f\n"%(self.f_Measure)
 		txt += " --> False Discovery Rate: %0.8f\n"%(self.FDR)
-		txt += " --> Miss-Rate: %0.8f\n"%(self.miss_Rate)
-		txt += " --> Fall-Out: %0.8f\n"%(self.fall_out)
+		txt += " --> Miss-Rate:            %0.8f\n"%(self.miss_Rate)
+		txt += " --> Fall-Out:             %0.8f\n"%(self.fall_out)
 
 		return txt
-
-
-
-"""
-JOEL:
-	precision
-	recall
-	...
-"""

@@ -36,19 +36,26 @@ class CSVReader(RawDataHandler):
 		self._filename = filename
 		self._data = None
 
-	def _readFile(self):
+	def _readFile(self, col_data, col_sentiment):
+		"""
+		@param 	col_data 		column with data
+		@param 	col_sentiment	column with sentiment classification
+		"""
 		LOGGER.debug("Attempting to read file: %s."%self._filename)
 		self._data = []
 		with open(self._filename, 'r') as csvfile:
 			cfile = csv.reader(csvfile, delimiter=CSV_DELIMITER)
 			next(cfile,None)
 			for row in cfile:
-				self._data.append([row[0],row[1].strip(),row[3]])
+				self._data.append([row[col_data].strip(),row[col_sentiment]])
 		self._n_samples = len(self._data)
 		LOGGER.debug("File has been completely read.")
 
 	"""
-	Reads the file
+	Reads the file, setting the columns where the message and sentiment data is
+
+	@param 	col_data 		column with data
+	@param 	col_sentiment	column with sentiment classification
 	"""
-	def read(self):
-		self._readFile()
+	def read(self, col_data, col_sentiment):
+		self._readFile(col_data, col_sentiment)

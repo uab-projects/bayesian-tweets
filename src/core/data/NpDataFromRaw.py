@@ -27,10 +27,10 @@ class NpDataFromRaw(RawDataHandler):
 	def __call__(self):
 		# Create messages
 		messages = np.array(
-			[sample[1].split() for sample in self._data]
+			[sample[0].split() for sample in self._data]
 		)
 		# Create classes
 		classes =  np.array(
-			[bool(int(sample[2])) for sample in self._data],
+			[bool(int(sample[1])) for sample in self._data],
 		dtype=np.bool)
 		return NpDataHandler(messages,classes)

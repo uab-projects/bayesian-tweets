@@ -25,7 +25,7 @@ class NpDataHandler(object):
 	"""
 	def __init__(self, messages=np.array([],dtype=object), classes=np.array([],dtype=bool)):
 		# Check vectors of same size
-		assert len(messages.shape) == len(classes.shape) == 1, "A NumPy data handler must handle just vectors, not matrixes in its messages and classes"
+		# assert len(messages.shape) == len(classes.shape) > 1, "A NumPy data handler must handle just vectors, not matrixes in its messages and classes"
 		assert messages.shape[0] == classes.shape[0], "NumPy Data Handler messages and classes must have same number of items (to match each message to a class)"
 		# set messages and classes
 		self._messages = messages
@@ -37,7 +37,7 @@ class NpDataHandler(object):
 	"""
 	def updateCounts(self):
 		# calculate sizes
-		self._n_samples = self._messages.shape[0]
+		self._n_samples = self._classes.shape[0]
 		self._n_words = sum(len(m) for m in self._messages)
 		if self._classes.dtype == bool:
 			self._n_classes = 2
