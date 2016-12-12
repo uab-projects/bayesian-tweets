@@ -17,11 +17,10 @@ CSV filename
 """
 CSV_FILE        = "res/tweets/FinalStemmedSentimentAnalysisDataset.csv"
 
-"""
-Reads a comma-separated-like file and returns the data in it
-"""
 class CSVReader(RawDataHandler):
 	"""
+	Reads a comma-separated-like file and returns the data in it
+
 	@attr 	_filename	the file to read
 	@attr	_data 		the data read
 	"""
@@ -51,11 +50,11 @@ class CSVReader(RawDataHandler):
 		self._n_samples = len(self._data)
 		LOGGER.debug("File has been completely read.")
 
-	"""
-	Reads the file, setting the columns where the message and sentiment data is
-
-	@param 	col_data 		column with data
-	@param 	col_sentiment	column with sentiment classification
-	"""
 	def read(self, col_data, col_sentiment):
+		"""
+		Reads the file, setting the columns where the message and sentiment data is
+
+		@param 	col_data 		column with data
+		@param 	col_sentiment	column with sentiment classification
+		"""
 		self._readFile(col_data, col_sentiment)

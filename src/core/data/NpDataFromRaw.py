@@ -17,14 +17,16 @@ Default column in the data to look for messages classes
 """
 COL_CLASSES = 	2
 
-"""
-Converts a raw data object into
-"""
 class NpDataFromRaw(RawDataHandler):
 	"""
-	Returns the tuple of vectors
+	Converts a raw data object into a NumPy data object, knowing that the raw data object contains a matrix with two columns, the first one containing data as a message, and the second, it's classification
 	"""
 	def __call__(self):
+		"""
+		Returns a NumPy data handler, with the messages and classes extracted from the raw data
+
+		@return NpDataHandler object with the data converted
+		"""
 		# Create messages
 		messages = np.array(
 			[sample[0].split() for sample in self._data]

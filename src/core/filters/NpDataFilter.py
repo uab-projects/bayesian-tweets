@@ -5,12 +5,11 @@ from core.data.NpDataHandler import NpDataHandler
 # Constants
 LOGGER = logging.getLogger(__name__)
 
-"""
-Filters the data passed according to a list of filters passed when filtering
-Each filter must be a function that returns true for the word passed as argument if the word must be present, or false if not
-"""
 class NpDataFilter(NpDataHandler):
 	"""
+	Filters the data passed according to a list of filters passed when filtering
+	Each filter must be a function that returns true for the word passed as argument if the word must be present, or false if not
+
 	@attr 	_filter_list 	list of filters to apply to the data
 	"""
 	__slots__ = ["_filter_list"]

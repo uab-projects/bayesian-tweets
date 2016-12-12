@@ -13,21 +13,21 @@ class NpCrossValidationSplitter(CrossValidationSplitter):
     """
     __slots__ = ["_k","_discard"]
 
-    """
-    Shuffles the data
-    """
     def _shuffle(self):
+        """
+        Shuffles the data
+        """
         permutation = np.random.permutation(self._data.n_samples)
         self._data = NpDataHandler(self._data.messages[permutation], self._data.classes[permutation])
 
-    """
-    Shuffles the data randomly, then given the number of groups, k, splits the
-    data into k groups and finally creates a list with a reference to the union
-    of the lists leaving one for validation in each iteration
-
-    @return     list of separated groups
-    """
     def __call__(self):
+        """
+        Shuffles the data randomly, then given the number of groups, k, splits the
+        data into k groups and finally creates a list with a reference to the union
+        of the lists leaving one for validation in each iteration
+
+        @return     list of separated groups
+        """
         # Shuffling
         self._shuffle()
 

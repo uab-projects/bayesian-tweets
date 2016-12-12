@@ -13,14 +13,14 @@ iteration, a group of validation and the rest for training, with each k-group
 having approximately the same quantity of each class
 """
 class StratifiedCrossValidationSplitter(CrossValidationSplitter):
-    """
-    Shuffles the data randomly, then given the number of groups, k, splits the
-    data into k groups, respecting the proportionality of classes in the general set and finally creates a list with a reference to the union
-    of the lists leaving one for validation in each iteration
-
-    @return     list of separated groups of datasets
-    """
     def __call__(self):
+        """
+        Shuffles the data randomly, then given the number of groups, k, splits the
+        data into k groups, respecting the proportionality of classes in the general set and finally creates a list with a reference to the union
+        of the lists leaving one for validation in each iteration
+
+        @return     list of separated groups of datasets
+        """
         # Shuffling
         self._shuffle()
         # Convert k-groups into number of rows

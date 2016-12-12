@@ -4,6 +4,14 @@ from .constants import *
 
 # helping methods
 def evalTF(string):
+	"""
+	Given a string, evaluates that string and returns True or False depending
+	if the string is "true" or "false", and most-important, case insensitive
+
+	@throws 	Exception if string is not evaluable
+	@param 		string to check if true or false
+	@return 	True if string is "true", false if it's "false" (case insensitive)
+	"""
 	return ast.literal_eval(string.title())
 
 # Default parser

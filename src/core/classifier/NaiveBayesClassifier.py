@@ -54,7 +54,7 @@ class NaiveBayesClassifier(object):
 		Given a message, classifies the message according to the data learned and returns the classification for the message
 
 		@param 	message 	message to classify
-		@return classification for the message
+		@return classification for the message, expressed as a tuple where the first element represents the classification and the second the probability of the classification (or pseudo-probability)
 		"""
 		# Initialize vars
 		classifiedClass = None
@@ -79,5 +79,4 @@ class NaiveBayesClassifier(object):
 			if prob > classifiedProb:
 				classifiedClass = clazz
 				classifiedProb = prob
-			print(math.e**prob)
 		return classifiedClass,math.e**classifiedProb
