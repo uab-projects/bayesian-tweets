@@ -137,3 +137,11 @@ DEFAULT_PARSER.add_argument("--filter-twitter",
 	action="store_true",
 	help="""enables all recommended twitter filters (removes Twitter argot like @mentions #hashtags and RTs)"""
 )
+# About learning
+DEFAULT_PARSER.add_argument("-e","--estimates",
+	action="store",
+	metavar="n",
+	help="number of samples to imaginate when a word has not been found in training data and has to be classified (therefore this imaginary sample will be added to words in training data too). If n=1, we are applying Laplace smoothing. Default is %d"%(ESTIMATES_DEFAULT),
+	type=int,
+	default=ESTIMATES_DEFAULT
+)

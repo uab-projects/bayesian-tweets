@@ -187,13 +187,15 @@ def main():
 
 	# Loop datasets and evaluate
 	LOGGER.info(" CLASSIFY: Starting learn and classification")
+	LOGGER.info(" CLASSIFY: We'll imaginate %d samples for each iteration",
+	args.estimates)
 	i = 1
 	for dataset in datasets:
 		if len(datasets) > 1:
 			LOGGER.info("    I[%02d]: Starting iteration",i)
 		trainingSet, validationSet = dataset
 		# Learn
-		learn = NaiveBayesLearner(trainingSet)
+		learn = NaiveBayesLearner(trainingSet,args.estimates)
 		learn()
 		# Classify
 		classifier = NaiveBayesClassifier(learn)

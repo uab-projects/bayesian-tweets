@@ -59,19 +59,17 @@ class NaiveBayesClassifier(object):
 		# Initialize vars
 		classifiedClass = None
 		classifiedProb = float("-inf")
-		classes = 2
+		classes = self._learner.n_classes
 		# Check classes
 		for clazz in range(classes):
 			# Calculate probability
 			prob = 0.
 			for word in msg:
-				wordInfo = None
-				try:
-					wordInfo = self._learner.wordDic[word]
-				except:
-					pass
+				wordInfo = self._learner.wordDic.get(word,None)
 				if wordInfo == None or wordInfo[clazz+classes] == 0:
-					prob += 0
+					imaginaryProb = self._learner.estimates / (self._learner.n_words[clazz] + self._learner.estimates*len(self._learner.wordDic))
+					if imaginaryProb:
+						prob += math.log(imaginaryProb)
 				else:
 					prob += math.log(wordInfo[clazz+classes])
 			prob += math.log(self._learner.classes_prob[clazz])
@@ -79,4 +77,4 @@ class NaiveBayesClassifier(object):
 			if prob > classifiedProb:
 				classifiedClass = clazz
 				classifiedProb = prob
-		return classifiedClass,math.e**classifiedProb
+		return classifiedClass,None

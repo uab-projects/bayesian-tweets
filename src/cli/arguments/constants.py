@@ -60,7 +60,7 @@ SPLITTERS_NAMES = list(SPLITTERS.keys())
 """
 Default splitter name
 """
-SPLITTER_DEFAULT = SPLITTERS_NAMES[0]
+SPLITTER_DEFAULT = "cross-validation"
 
 """
 Default number of groups in cross-validation or stratified cross-validation
@@ -74,3 +74,9 @@ Default log level
 LOGS = ["debug","info","warning","error","critical"]
 LOGS_LEVELS = [10,20,30,40,50]
 LOG_DEFAULT = LOGS[1]
+
+# Learning
+"""
+Sets the number of estimates to imaginate when a word is found in classification that has not been found in training. If equals 1, the technique is Laplace smoothing
+"""
+ESTIMATES_DEFAULT = 1
