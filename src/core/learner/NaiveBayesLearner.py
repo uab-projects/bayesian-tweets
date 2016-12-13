@@ -61,9 +61,11 @@ class NaiveBayesLearner(object):
 			for word in tweet:
 				if word not in self._wordDic.keys():
 					self._wordDic[word] = [0 for _ in range(self._data._n_classes)] + [0. for _ in range(self._data._n_classes)]
-					self._n_wordsUnique[clazz] += 1
 				self._wordDic[word][clazz]+=1
 				self._n_words[clazz] += 1
+				# Unique word?
+				if self._wordDic[word][clazz] == 1:
+					self._n_wordsUnique[clazz] += 1
 
 		return self._wordDic
 
