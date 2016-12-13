@@ -174,6 +174,11 @@ def main():
 	# Welcome
 	LOGGER.info("Welcome to Bayesian Tweets!")
 
+	# Check arguments
+	if args.dict_size <= 0. or args.dict_size > 1:
+		LOGGER.critical("Dictionary size must be a number in the following limit 0. < dict_size <= 1. (Passed value is %.2f)",args.dict_size)
+		sys.exit(1)
+
 	# Get input data
 	setDataFile()
 	setData()
@@ -212,7 +217,7 @@ def main():
 				LOGGER.info(" CLASSIFY: Distribution: %0.2f%% training, %0.2f%% validation",trainingSet.n_samples*100/total_samples,validationSet.n_samples*100/total_samples)
 		# Learn
 		learn = NaiveBayesLearner(trainingSet,args.estimates)
-		learn()
+		learn(args.dict_size)
 		# Classify
 		classifier = NaiveBayesClassifier(learn)
 		if args.splitter == "nosplit":
@@ -233,13 +238,14 @@ def main():
 		if len(datasets) > 1:
 			LOGGER.info("    I[%02d]: Finished iteration",i)
 		# Stop iterating
-		if args.iterations >= i:
+		if args.iterations <= i:
+			print(args.iterations,i)
 			break
 		i+=1
 	LOGGER.info(" CLASSIFY: Finished")
 
 	# Exit
-	LOGGER.info("Bye!")
+	LOGGER.info("Thanks for trusting us!")
 
 # Start execution
 if __name__ == "__main__":

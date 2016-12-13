@@ -5,6 +5,7 @@ import numpy as np
 # Constants
 LOGGER = logging.getLogger(__name__)
 DEFAULT_ESTIMATES = 1	# LaPlace Smoothing
+DEFAULT_DICT_SIZE = 1.
 
 class NaiveBayesLearner(object):
 	"""
@@ -32,12 +33,15 @@ class NaiveBayesLearner(object):
 		self._n_words 		= [0 for _ in range(self._data._n_classes)]
 		self._n_wordsUnique = [0 for _ in range(self._data._n_classes)]
 
-	def __call__(self):
+	def __call__(self, dict_size = DEFAULT_DICT_SIZE):
 		"""
-
+		@param 	dict_size	size of the dictionary, as percent of total words
+				just top most-seen words will be saved
 		"""
 		# Create dictionary of occurrencies
 		self._createDic()
+		if dict_size != 1.:
+			self._cutDic(dict_size)
 		for clazz in range(self._data.n_classes):
 			# Calculate class probability
 			classLen = np.sum(self._data.classes)
@@ -68,6 +72,28 @@ class NaiveBayesLearner(object):
 					self._n_wordsUnique[clazz] += 1
 
 		return self._wordDic
+
+	def _cutDicThreshold(self, llindar):
+		for word, count in self._wordDic.items():
+			if count[0] < llindar and count[1] < llindar:
+				self._wordDic.pop(word)
+
+	def _cutDic(self, percent):
+		total = len(self._wordDic)
+		les_que_volem = int(percent*total)
+		print (total, les_que_volem)
+		print(len(self._wordDic))
+		# d'alguna manera encara per determinar
+		no_sortedDic = self._wordDic.items()
+
+		sorted(no_sortedDic, key=lambda item: item[1][0]+item[1][1])
+
+		no_sortedDic = list(no_sortedDic)
+
+		for item in no_sortedDic[les_que_volem+1:]:
+			self._wordDic.pop(item[0])
+
+		print(len(self._wordDic))
 
 	@property
 	def estimates(self):
