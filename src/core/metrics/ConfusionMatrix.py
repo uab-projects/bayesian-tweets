@@ -161,13 +161,13 @@ class ConfusionMatrix(object):
 		txt += "            |  False  |   True  |\n"
 		txt += " Re | False | %07d | %07d |\n" % (self.trueNegatives, self.falsePositives)
 		txt += " al | True  | %07d | %07d |\n" % (self.falseNegatives, self.truePositives)
-		txt += " --> Accuracy:             %0.8f\n"%(self.accuracy)
-		txt += " --> Precision:            %0.8f\n"%(self.precision)
-		txt += " --> Recall:               %0.8f\n"%(self.recall)
-		txt += " --> Specificity:          %0.8f\n"%(self.specificity)
-		txt += " --> F-Measure:            %0.8f\n"%(self.f_Measure)
-		txt += " --> False Discovery Rate: %0.8f\n"%(self.FDR)
-		txt += " --> Miss-Rate:            %0.8f\n"%(self.miss_Rate)
-		txt += " --> Fall-Out:             %0.8f\n"%(self.fall_out)
+		txt += " --> Accuracy:             %0.8f%%\n"%(self.accuracy*100)
+		txt += " --> Precision:            %0.8f%%\n"%(self.precision*100)
+		txt += " --> Recall:               %0.8f%%\n"%(self.recall*100)
+		txt += " --> Specificity:          %0.8f%%\n"%(self.specificity*100)
+		txt += " --> F-Measure:            %0.8f%%\n"%(self.f_Measure*100)
+		txt += " --> False Discovery Rate: %0.8f%%\n"%(self.FDR*100)
+		txt += " --> Miss-Rate:            %0.8f%%\n"%(self.miss_Rate*100)
+		txt += " --> Fall-Out:             %0.8f%%\n"%(self.fall_out*100)
 
 		return txt
