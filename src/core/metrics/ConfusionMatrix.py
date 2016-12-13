@@ -157,10 +157,10 @@ class ConfusionMatrix(object):
 		txt =  "-------------------------------------------------------------\n"
 		txt += " %s Information\n"%(self.__class__.__name__)
 		txt += "-------------------------------------------------------------\n"
-		txt += "            |   Predicted   |\n"
-		txt += "            | False | True  |\n"
-		txt += " Re | False | %05d | %05d |\n" % (self.trueNegatives, self.falsePositives)
-		txt += " al | True  | %05d | %05d |\n" % (self.falseNegatives, self.truePositives)
+		txt += "            |     Predicted     |\n"
+		txt += "            |  False  |   True  |\n"
+		txt += " Re | False | %07d | %07d |\n" % (self.trueNegatives, self.falsePositives)
+		txt += " al | True  | %07d | %07d |\n" % (self.falseNegatives, self.truePositives)
 		txt += " --> Accuracy:             %0.8f\n"%(self.accuracy)
 		txt += " --> Precision:            %0.8f\n"%(self.precision)
 		txt += " --> Recall:               %0.8f\n"%(self.recall)
