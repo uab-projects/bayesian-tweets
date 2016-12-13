@@ -149,6 +149,13 @@ def generateDatasets():
 	# Apply params
 	if args.splitter == "cross-validation":
 		splitter.k = args.k
+		# Set number of iterations
+		if args.iterations != args.k:
+			if args.iterations < args.k:
+				LOGGER.info("DATASET_G: Limiting iterations to %d",args.iterations)
+			else:
+				LOGGER.critical("DATASET_G: Number of k groups generated must be greater than iterations (E: %d > %d)",args.k, args.iterations)
+				sys.exit(1)
 	# Split
 	LOGGER.info("DATASET_G: Starting t/v sets using %s",args.splitter)
 	datasets = splitter()
@@ -194,6 +201,15 @@ def main():
 		if len(datasets) > 1:
 			LOGGER.info("    I[%02d]: Starting iteration",i)
 		trainingSet, validationSet = dataset
+		# Information
+		if args.show_iter_data:
+			LOGGER.info(" CLASSIFY: Showing trainingSet information")
+			print(trainingSet)
+			if validationSet != None:
+				LOGGER.info(" CLASSIFY: Showing validationSet information")
+				print(validationSet)
+				total_samples = trainingSet.n_samples + validationSet.n_samples
+				LOGGER.info(" CLASSIFY: Distribution: %0.2f%% training, %0.2f%% validation",trainingSet.n_samples*100/total_samples,validationSet.n_samples*100/total_samples)
 		# Learn
 		learn = NaiveBayesLearner(trainingSet,args.estimates)
 		learn()
@@ -216,6 +232,9 @@ def main():
 			print(cunfuciu)
 		if len(datasets) > 1:
 			LOGGER.info("    I[%02d]: Finished iteration",i)
+		# Stop iterating
+		if args.iterations >= i:
+			break
 		i+=1
 	LOGGER.info(" CLASSIFY: Finished")
 

@@ -39,6 +39,11 @@ Shows information about the filtered data
 SHOW_DATA_FILTER_DEFAULT = False
 
 """
+Shows information about training and validation by default
+"""
+SHOW_DATA_ITER_DEFAULT = False
+
+"""
 Shows information about the read and filtered data
 """
 SHOW_DATA_DEFAULT = False
@@ -67,6 +72,12 @@ Default number of groups in cross-validation or stratified cross-validation
 """
 SPLITTER_CV_K_DEFAULT = 3
 
+"""
+The number of iterations to loop datasets (training and validation). Default is
+dynamic (depending on the cross-validation k, will loop k times)
+"""
+ITERATIONS_DEFAULT = SPLITTER_CV_K_DEFAULT
+
 # Log level
 """
 Default log level
@@ -79,4 +90,4 @@ LOG_DEFAULT = LOGS[1]
 """
 Sets the number of estimates to imaginate when a word is found in classification that has not been found in training. If equals 1, the technique is Laplace smoothing
 """
-ESTIMATES_DEFAULT = 1
+ESTIMATES_DEFAULT = 0

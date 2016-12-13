@@ -99,6 +99,16 @@ DEFAULT_PARSER.add_argument("--show-filter-data",
 	const=True,
 	default=SHOW_DATA_FILTER_DEFAULT
 )
+DEFAULT_PARSER.add_argument("--show-iter-data",
+	metavar="true|false",
+	action="store",
+	nargs="?",
+	help="""enables or disables printing information about data to be used as training and validation in each iteration (%s
+	by default)"""%("enabled" if SHOW_DATA_ITER_DEFAULT else "disabled"),
+	type=evalTF,
+	const=True,
+	default=SHOW_DATA_ITER_DEFAULT
+)
 DEFAULT_PARSER.add_argument("--show-data",
 	metavar="true|false",
 	action="store",
@@ -124,6 +134,14 @@ DEFAULT_PARSER.add_argument("-k",
 	type=int,
 	default=SPLITTER_CV_K_DEFAULT,
 )
+DEFAULT_PARSER.add_argument("-i","--iterations",
+	action="store",
+	metavar="n",
+	help="Number of times to loop datasets, if you used a splitter that generates multiple training and validaton sets. By default, k iterations will be used. Default is %d"%(ITERATIONS_DEFAULT),
+	type=int,
+	default=ITERATIONS_DEFAULT
+)
+
 # About filters
 DEFAULT_PARSER.add_argument("--filter-lexical",
 	action="store_true",
@@ -142,6 +160,6 @@ DEFAULT_PARSER.add_argument("-e","--estimates",
 	action="store",
 	metavar="n",
 	help="number of samples to imaginate when a word has not been found in training data and has to be classified (therefore this imaginary sample will be added to words in training data too). If n=1, we are applying Laplace smoothing. Default is %d"%(ESTIMATES_DEFAULT),
-	type=int,
+	type=float,
 	default=ESTIMATES_DEFAULT
 )
