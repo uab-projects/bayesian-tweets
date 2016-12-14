@@ -1,5 +1,6 @@
 # Libraries
 from core.splitter.NpCrossValidationSplitter import NpCrossValidationSplitter
+from core.splitter.NpStratifiedCrossValidationSplitter import NpStratifiedCrossValidationSplitter
 
 # About input
 """
@@ -54,6 +55,7 @@ Splitters and the associated classes
 """
 SPLITTERS = {
     "cross-validation" : NpCrossValidationSplitter,
+    "stratified-cross-validation": NpStratifiedCrossValidationSplitter,
     "nosplit" : None
 }
 
