@@ -42,11 +42,11 @@ class CSVReader(RawDataHandler):
 		"""
 		LOGGER.debug("Attempting to read file: %s."%self._filename)
 		self._data = []
-		with open(self._filename, 'r') as csvfile:
+		with open(self._filename, 'r',encoding="utf8",errors="ignore") as csvfile:
 			cfile = csv.reader(csvfile, delimiter=CSV_DELIMITER)
 			next(cfile,None)
 			for row in cfile:
-				self._data.append([row[col_data].strip(),row[col_sentiment]])
+				self._data.append([row[col_data].strip().lower(),row[col_sentiment]])
 		self._n_samples = len(self._data)
 		LOGGER.debug("File has been completely read.")
 

@@ -84,6 +84,8 @@ def setData():
 		inputData.read(args.col_data-1,args.col_sentiment-1)
 	except Exception as e:
 		LOGGER.error("Unable to read data file %s (%s)",dataFile,str(e))
+		import traceback
+		traceback.print_exception(e)
 		sys.exit(1)
 	LOGGER.info("READ_FILE: Finished reading data file")
 
@@ -239,7 +241,6 @@ def main():
 			LOGGER.info("    I[%02d]: Finished iteration",i)
 		# Stop iterating
 		if args.iterations <= i:
-			print(args.iterations,i)
 			break
 		i+=1
 	LOGGER.info(" CLASSIFY: Finished")

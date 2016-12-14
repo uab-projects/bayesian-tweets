@@ -81,19 +81,15 @@ class NaiveBayesLearner(object):
 	def _cutDic(self, percent):
 		total = len(self._wordDic)
 		les_que_volem = int(percent*total)
-		print (total, les_que_volem)
-		print(len(self._wordDic))
 		# d'alguna manera encara per determinar
 		no_sortedDic = self._wordDic.items()
 
-		sorted(no_sortedDic, key=lambda item: item[1][0]+item[1][1])
+		sorted(no_sortedDic, key=lambda item: (item[1][0]+item[1][1]))
 
 		no_sortedDic = list(no_sortedDic)
 
 		for item in no_sortedDic[les_que_volem+1:]:
 			self._wordDic.pop(item[0])
-
-		print(len(self._wordDic))
 
 	@property
 	def estimates(self):

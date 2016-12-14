@@ -1,3 +1,5 @@
+import re
+
 # Global functions
 def recommended(word):
 	return isNotInteger(word)
@@ -7,4 +9,5 @@ def isNotInteger(word):
 	"""
 	Just allows words that are not all numbers
 	"""
-	return not word.isdigit()
+	pattern = re.compile('(?:(?:\d+,?)+(?:\.?\d+)?)')
+	return not pattern.match(word)
