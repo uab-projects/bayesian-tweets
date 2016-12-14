@@ -10,7 +10,7 @@ LOGGER = logging.getLogger(__name__)
 """
 CSV fields separator, in order no diferentiate the different information in the file
 """
-CSV_DELIMITER   = ","
+CSV_DELIMITER   = ";"
 
 """
 CSV filename
