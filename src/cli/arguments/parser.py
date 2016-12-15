@@ -183,3 +183,34 @@ DEFAULT_PARSER.add_argument("--dict-size",
 	type=float,
 	default=DICT_SIZE_DEFAULT
 )
+DEFAULT_PARSER.add_argument("--twitter-account",
+	action="store",
+	metavar="id|username",
+	help="""given the username or id of a Twitter user, evaluates all their statuses to see if they're good or not. Are you a hater? Type there your username and check. The user must have public profile or either supplied authentication info is able to read that user profile. By default is disabled""",
+	type=str,
+	default=TWITTER_ACCOUNT_DEFAULT
+)
+DEFAULT_PARSER.add_argument("--twitter-auth",
+	action="store",
+	metavar="authfileinfo",
+	help="""provides the file with authentication info in order to connect to Twitter API. File must contain the following information: consumerKey, consumerSecret,accessToken,accessSecret, separed by lines. Default is %s"""%(TWITTER_AUTH_FILE),
+	type=str,
+	default=TWITTER_AUTH_FILE
+)
+DEFAULT_PARSER.add_argument("--twitter-account-cache",
+	metavar="true|false",
+	action="store",
+	nargs="?",
+	help="""enables or disables twitter account cache. This way, when tweets are retrieved will be cached into a local disk file, containing a list of tweets per line. File will be named %susername.txt. After that, all queries to the user will be retrieved from there. Delete the file to delete the cache. (%s
+	by default)"""%(TWITTER_ACCOUNT_CACHE_NAME,"enabled" if TWITTER_ACCOUNT_CACHE else "disabled"),
+	type=evalTF,
+	const=True,
+	default=TWITTER_ACCOUNT_CACHE
+)
+DEFAULT_PARSER.add_argument("--twitter-account-limit",
+	action="store",
+	metavar="authfileinfo",
+	help="""Number of tweets to retrieve. Do not set the option to retrieve all tweets, no limit of tweets. Set to 0 to retrieve all tweets too. Default is %s"""%(TWITTER_ACCOUNT_LIMIT),
+	type=str,
+	default=TWITTER_ACCOUNT_LIMIT
+)

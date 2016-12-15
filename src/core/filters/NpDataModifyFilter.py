@@ -12,9 +12,11 @@ class NpDataModifyFilter(NpDataFilter):
 	"""
 	def __call__(self):
 		LOGGER.debug("Attempting to filter %d tweets",self._n_samples)
-		for message in self._messages:
-			for word in message:
-				for f in self._filter_list:
-					word = f(word)
+		def apply_filters(word):
+			for f in self._filter_list:
+				word = f(word)
+			return word
+		for i in range(len(self._messages)):
+			self._messages[i] = [apply_filters(w) for w in self._messages[i]]
 		LOGGER.debug("Filtering stage complete.")
 		self.updateCounts()

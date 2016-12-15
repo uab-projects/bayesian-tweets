@@ -103,3 +103,24 @@ DICT_SIZE_DEFAULT = 1.
 File delimiter default value
 """
 FILE_DELIMITER_DEFAULT = ";"
+
+"""
+Twitter account evaluation
+"""
+TWITTER_ACCOUNT_DEFAULT = ""
+
+"""
+Twitter account limit
+"""
+TWITTER_ACCOUNT_LIMIT = 0 # all tweets
+
+"""
+Twitter cache
+"""
+TWITTER_ACCOUNT_CACHE_NAME = ".twitter-cache-"
+TWITTER_ACCOUNT_CACHE = True
+
+"""
+Twitter auth file, containing all data to auth separed by lines
+"""
+TWITTER_AUTH_FILE = ".twitter-auth"

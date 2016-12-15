@@ -6,7 +6,9 @@ import os
 import sys
 import platform
 import logging
+import traceback
 import core.log
+import numpy as np
 
 from cli.arguments.parser import DEFAULT_PARSER
 from cli.arguments.constants import *
@@ -51,6 +53,12 @@ Set of training and validation sets
 """
 datasets = None
 
+"""
+Set of Twitter statuses to evaluate
+"""
+statuses = None
+npStatuses = None
+
 #Functions
 def parseArguments(parser, args=None):
 	"""
@@ -86,7 +94,6 @@ def setData():
 		inputData.read(args.col_data-1,args.col_sentiment-1,args.delimiter)
 	except Exception as e:
 		LOGGER.error("Unable to read data file %s (%s)",dataFile,str(e))
-		import traceback
 		traceback.print_exc()
 		sys.exit(1)
 	LOGGER.info("READ_FILE: Finished reading data file")
@@ -115,11 +122,11 @@ def convertData():
 	del inputData
 
 
-def applyFilters():
+def applyFilters(datafilter=True):
 	"""
 	Filters the data and returns the filtered data
 	"""
-	global npData
+	global npData,npStatuses
 	# Removal filters
 	LOGGER.info("FILT_DATA: Checking removal filters")
 	removeFilter = False
@@ -134,14 +141,24 @@ def applyFilters():
 		filters.append(twitter.recommended)
 		removeFilter = True
 	if removeFilter:
-		npData = NpDataRemoveFilter.fromNpDataHandler(npData)
-		npData.filter_list = filters
-		LOGGER.info("FILT_DATA: Starting to apply removal filters")
-		words_before = npData.n_words
-		npData()
-		words_after = npData.n_words
-		LOGGER.info("FILT_DATA: Finished applying removal filters (%d words filtered)",
-			words_before-words_after)
+		if datafilter:
+			npData = NpDataRemoveFilter.fromNpDataHandler(npData)
+			npData.filter_list = filters
+			LOGGER.info("FILT_DATA: Starting to apply removal filters")
+			words_before = npData.n_words
+			npData()
+			words_after = npData.n_words
+			LOGGER.info("FILT_DATA: Finished applying removal filters (%d words filtered)",
+				words_before-words_after)
+		if npStatuses != None:
+			npStatuses = NpDataRemoveFilter.fromNpDataHandler(npStatuses)
+			npStatuses.filter_list = filters
+			LOGGER.info("FILT_DATA: Starting to apply removal filters to Tweets")
+			words_before = npStatuses.n_words
+			npStatuses()
+			words_after = npStatuses.n_words
+			LOGGER.info("FILT_DATA: Finished applying removal filters to Tweets (%d words filtered)",
+				words_before-words_after)
 	else:
 		LOGGER.info("FILT_DATA: No removal filters applied")
 	# Modify filters
@@ -152,14 +169,104 @@ def applyFilters():
 		filters.append(stemmer.getSnowballStemmer("english"))
 		modifyFilter = True
 	if modifyFilter:
-		npData = NpDataModifyFilter.fromNpDataHandler(npData)
-		npData.filter_list = filters
-		LOGGER.info("FILT_DATA: Starting to apply modification filters")
-		npData()
-		LOGGER.info("FILT_DATA: Finished applying modifying filters")
+		if datafilter:
+			npData = NpDataModifyFilter.fromNpDataHandler(npData)
+			npData.filter_list = filters
+			LOGGER.info("FILT_DATA: Starting to apply modification filters")
+			npData()
+			LOGGER.info("FILT_DATA: Finished applying modifying filters")
+		if npStatuses != None:
+			npStatuses = NpDataModifyFilter.fromNpDataHandler(npStatuses)
+			npStatuses.filter_list = filters
+			LOGGER.info("FILT_DATA: Starting to apply modification filters to Tweets")
+			npStatuses()
+			LOGGER.info("FILT_DATA: Finished applying modifying filters to Tweets")
 	else:
 		LOGGER.info("FILT_DATA: No modify filters applied")
 
+def getStatusByUser(user):
+	"""
+	Given a user, reads the Twitter API auth file, connects to Twitter and retrieves all the status tweets from the user. Saves them into status variable
+
+	@param 	user 	twitter user to look for
+	"""
+	global statuses
+	# Check cache
+	cacheFile = TWITTER_ACCOUNT_CACHE_NAME+user+".txt"
+	if os.path.isfile(cacheFile):
+		try:
+			cacheData = open(cacheFile,"r",encoding="utf8",errors="ignore")
+			statuses = cacheData.read().splitlines()
+			cacheData.close()
+		except Exception as e:
+			LOGGER.critical("TWITT_API: Unable to read cache file %s",cacheFile)
+			sys.exit(1)
+		LOGGER.warning("TWITT_API: Found cache for user %s, using cache instead",user)
+		LOGGER.info("TWITT_API: %d cached Tweets loaded",len(statuses))
+		return
+	authdata = None
+	LOGGER.info("TWITT_API: Reading authentication data from %s",args.twitter_auth)
+	try:
+		authfile = open(args.twitter_auth,"r")
+		authdata = authfile.read().splitlines()
+	except Exception as e:
+		LOGGER.critical("TWITT_API: Unable to read Twitter API auth data file %s",str(e))
+		sys.exit(1)
+	# API Auth Malformed
+	if len(authdata) != 4:
+		LOGGER.critical("TWITT_API: Auth data file malformed. Needed 4 lines of text, found %d. Each line must contain in the following order: consumerKey, consumerSecret, accessToken, accessSecret",len(authdata))
+		sys.exit(1)
+	# Create API
+	try:
+		from core.tweepy.api import APIWrapper
+	except:
+		LOGGER.critical("TWITT_API: Package <tweepy> can't be loaded. Checkout it's installed. You can install it using: pip install tweepy")
+		traceback.print_exc()
+		sys.exit(1)
+	api = None
+	try:
+		api = APIWrapper.withAuthentication(*authdata)
+	except Exception as e:
+		LOGGER.critical("TWITT_API: Unable to authenticate using data passed (%s). Library error probably :(",authdata)
+		traceback.print_exc()
+		sys.exit(1)
+	# Retrieve Tweets
+	statusIter = None
+	try:
+		statusIter = api.getUserTweets(user)
+	except Exception as e:
+		LOGGER.critical("TWITT_API: User tweets couldn't be requested properly: %s",str(e))
+		traceback.print_exc()
+		sys.exit(1)
+	# Convert them to text
+	try:
+		if args.twitter_account_limit:
+			statuses = [status.text for status in statusIter.items(args.twitter_account_limit)]
+		else:
+			statuses = [status.text for status in statusIter.items()]
+	except Exception as e:
+		LOGGER.critical("TWITT_API: Unable to retrieve statuses from user %s: %s",user,str(e))
+		traceback.print_exc()
+		sys.exit(1)
+	LOGGER.info("TWITT_API: Succesfully loaded %d Tweets from %s",len(statuses),user)
+	# Save to file
+	if args.twitter_account_cache:
+		try:
+			cacheData = open(cacheFile,"w")
+			for tweet in statuses:
+				cacheData.write("%s\n"%tweet)
+			LOGGER.info("TWITT_API: Wrote %d Tweets into cache",len(statuses))
+		except Exception as e:
+			LOGGER.error("TWITT_API: Unable to update cache file %s: %s",cacheFile,str(e))
+	return
+
+def convertStatuses():
+	"""
+	Converts statuses from list of text into a NpDataHandler
+	"""
+	global statuses, npStatuses
+	rawData = [[status,1] for status in statuses]
+	npStatuses = NpDataFromRaw(rawData)()
 
 def generateDatasets():
 	"""
@@ -206,6 +313,12 @@ def main():
 		LOGGER.critical("Dictionary size must be a number in the following limit 0. < dict_size <= 1. (Passed value is %.2f)",args.dict_size)
 		sys.exit(1)
 
+	# Twitter connection
+	if args.twitter_account:
+		args.splitter = "nosplit"
+		getStatusByUser(args.twitter_account)
+		convertStatuses()
+
 	# Get input data
 	setDataFile()
 	setData()
@@ -226,7 +339,7 @@ def main():
 
 	# Loop datasets and evaluate
 	LOGGER.info(" CLASSIFY: Starting learn and classification")
-	LOGGER.info(" CLASSIFY: We'll imaginate %d samples for each iteration",
+	LOGGER.info(" CLASSIFY: We'll use additive smoothing, alpha=%0.2f",
 	args.estimates)
 	i = 1
 	for dataset in datasets:
@@ -248,16 +361,50 @@ def main():
 		# Classify
 		classifier = NaiveBayesClassifier(learn)
 		if args.splitter == "nosplit":
+			manual_type = True
+			if args.twitter_account:
+				# Analyze all tweets
+				while True:
+					nes,pos = np.bincount(np.array([c[0] for c in map(classifier,npStatuses.messages)],dtype=bool),minlength=2)
+					LOGGER.info("------------------ RESULTS ------------------")
+					LOGGER.info("POSITIVEs: %d (%0.2f%%)",pos,pos/npStatuses.n_samples*100)
+					LOGGER.info("NEGATIVEs: %d (%0.2f%%)",nes,nes/npStatuses.n_samples*100)
+					if pos > nes:
+						LOGGER.info("You are a POSITIVE person, congrats! :3")
+					elif pos < nes:
+						LOGGER.info("You are a NEGATIVE person! Stop being a hater and make Internet better, plz")
+					else:
+						LOGGER.info("You are NEUTRAL. Amazing! Like Kristen Stewart's faces :')'")
+					print("Do you want to check another user, type it's name or just Enter to continue")
+					resp = input()
+					if resp == "":
+						break
+					else:
+						getStatusByUser(resp)
+						convertStatuses()
+						applyFilters(False)
+				while True:
+					print("Do you want to type and see live classifications?")
+					resp = input()
+					if resp.lower() == "yes" or resp.lower() == "y":
+						break
+					elif resp.lower() == "no" or resp.lower() == "n":
+						manual_type = False
+						break
+					else:
+						print("Invalid answer, type yes or no")
+
 			# Input by console
-			LOGGER.info("     LIVE: Starting live classifications")
-			LOGGER.info("     LIVE: Press Enter without a message to exit")
-			while True:
-				LOGGER.info("     LIVE: Please, input a text to classify")
-				message = input()
-				if message == "":
-					break;
-				prediction, prob = classifier(message.split(" "))
-				LOGGER.info("     LIVE: Classification is %d with probability %0.2f%%",prediction,prob*100)
+			if manual_type:
+				LOGGER.info("     LIVE: Starting live classifications")
+				LOGGER.info("     LIVE: Press Enter without a message to exit")
+				while True:
+					LOGGER.info("     LIVE: Please, input a text to classify")
+					message = input()
+					if message == "":
+						break;
+					prediction = classifier(message.split(" "))[0]
+					LOGGER.info("     LIVE: Classification is %s","positive" if prediction else "negative")
 		else:
 			# Confucioor
 			cunfuciu = classifier.classifySet(validationSet)
