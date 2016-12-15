@@ -68,6 +68,15 @@ DEFAULT_PARSER.add_argument("-t","--col-sentiment",
 	type=int,
 	default=COL_SENTIMENT_DEFAULT
 )
+
+DEFAULT_PARSER.add_argument("--delimiter",
+	metavar="n",
+	action="store",
+	help="""sets the delimiter to use when reading the file. Default is %s"""%(FILE_DELIMITER_DEFAULT),
+	type=str,
+	default=FILE_DELIMITER_DEFAULT
+)
+
 # About the input details
 DEFAULT_PARSER.add_argument("--show-pre-data",
 	metavar="true|false",
@@ -154,6 +163,10 @@ DEFAULT_PARSER.add_argument("--filter-types",
 DEFAULT_PARSER.add_argument("--filter-twitter",
 	action="store_true",
 	help="""enables all recommended twitter filters (removes Twitter argot like @mentions #hashtags and RTs)"""
+)
+DEFAULT_PARSER.add_argument("--filter-snowball",
+	action="store_true",
+	help="""modifies all words according to Snowball english stemmer"""
 )
 # About learning
 DEFAULT_PARSER.add_argument("-e","--estimates",

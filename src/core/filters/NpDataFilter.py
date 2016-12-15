@@ -19,19 +19,6 @@ class NpDataFilter(NpDataHandler):
 		self._filter_list = []
 
 	"""
-	Filters the data saved, applying to each data item the filters passed in
-	the filter list
-	"""
-	def applyFilters(self):
-		LOGGER.debug("Attempting to filter %d tweets",self._n_samples)
-		for message in self._messages:
-			for word in message:
-				if not all(f(word) for f in self._filter_list):
-					message.remove(word)
-		LOGGER.debug("Filtering stage complete.")
-		self.updateCounts()
-
-	"""
 	Returns the filters set to filter the data as a list
 
 	@return 	list of filters that will be used to filter data

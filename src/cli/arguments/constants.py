@@ -98,3 +98,8 @@ ESTIMATES_DEFAULT = 0
 Size of the dictionary to use when learning. Number 0. < n <= 1. If 1., no word will be omitted
 """
 DICT_SIZE_DEFAULT = 1.
+
+"""
+File delimiter default value
+"""
+FILE_DELIMITER_DEFAULT = ";"

@@ -16,7 +16,9 @@ from core.data.NpDataFromRaw import NpDataFromRaw
 from core.filters import lexical
 from core.filters import types
 from core.filters import twitter
-from core.filters.NpDataFilter import NpDataFilter
+from core.filters import stemmer
+from core.filters.NpDataRemoveFilter import NpDataRemoveFilter
+from core.filters.NpDataModifyFilter import NpDataModifyFilter
 from core.learner.NaiveBayesLearner import NaiveBayesLearner
 from core.classifier.NaiveBayesClassifier import NaiveBayesClassifier
 
@@ -81,11 +83,11 @@ def setData():
 	LOGGER.debug("File type is CSV")
 	inputData = CSVReader(dataFile)
 	try:
-		inputData.read(args.col_data-1,args.col_sentiment-1)
+		inputData.read(args.col_data-1,args.col_sentiment-1,args.delimiter)
 	except Exception as e:
 		LOGGER.error("Unable to read data file %s (%s)",dataFile,str(e))
 		import traceback
-		traceback.print_exception(e)
+		traceback.print_exc()
 		sys.exit(1)
 	LOGGER.info("READ_FILE: Finished reading data file")
 
@@ -118,23 +120,46 @@ def applyFilters():
 	Filters the data and returns the filtered data
 	"""
 	global npData
-	LOGGER.info("FILT_DATA: Adding filters")
-	npData = NpDataFilter.fromNpDataHandler(npData)
+	# Removal filters
+	LOGGER.info("FILT_DATA: Checking removal filters")
+	removeFilter = False
+	filters = []
 	if args.filter_types:
-		npData.addFilter(types.recommended)
+		filters.append(types.recommended)
+		removeFilter = True
 	if args.filter_lexical:
-		npData.addFilter(lexical.recommended)
+		filters.append(lexical.recommended)
+		removeFilter = True
 	if args.filter_twitter:
-		npData.addFilter(twitter.recommended)
-	if not len(npData.filter_list):
-		LOGGER.info("FILT_DATA: No filters applied")
-		return
-	LOGGER.info("FILT_DATA: Starting to apply filters")
-	words_before = npData.n_words
-	npData.applyFilters()
-	words_after = npData.n_words
-	LOGGER.info("FILT_DATA: Finished applying filters (%d words filtered)",
-		words_before-words_after)
+		filters.append(twitter.recommended)
+		removeFilter = True
+	if removeFilter:
+		npData = NpDataRemoveFilter.fromNpDataHandler(npData)
+		npData.filter_list = filters
+		LOGGER.info("FILT_DATA: Starting to apply removal filters")
+		words_before = npData.n_words
+		npData()
+		words_after = npData.n_words
+		LOGGER.info("FILT_DATA: Finished applying removal filters (%d words filtered)",
+			words_before-words_after)
+	else:
+		LOGGER.info("FILT_DATA: No removal filters applied")
+	# Modify filters
+	LOGGER.info("FILT_DATA: Adding modification filters")
+	modifyFilter = False
+	filters = []
+	if args.filter_snowball:
+		filters.append(stemmer.getSnowballStemmer("english"))
+		modifyFilter = True
+	if modifyFilter:
+		npData = NpDataModifyFilter.fromNpDataHandler(npData)
+		npData.filter_list = filters
+		LOGGER.info("FILT_DATA: Starting to apply modification filters")
+		npData()
+		LOGGER.info("FILT_DATA: Finished applying modifying filters")
+	else:
+		LOGGER.info("FILT_DATA: No modify filters applied")
+
 
 def generateDatasets():
 	"""
