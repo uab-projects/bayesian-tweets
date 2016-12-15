@@ -78,7 +78,7 @@ SPLITTER_CV_K_DEFAULT = 3
 The number of iterations to loop datasets (training and validation). Default is
 dynamic (depending on the cross-validation k, will loop k times)
 """
-ITERATIONS_DEFAULT = SPLITTER_CV_K_DEFAULT
+ITERATIONS_DEFAULT = 1
 
 # Log level
 """
@@ -92,7 +92,7 @@ LOG_DEFAULT = LOGS[1]
 """
 Sets the number of estimates to imaginate when a word is found in classification that has not been found in training. If equals 1, the technique is Laplace smoothing
 """
-ESTIMATES_DEFAULT = 0
+ESTIMATES_DEFAULT = 1.
 
 """
 Size of the dictionary to use when learning. Number 0. < n <= 1. If 1., no word will be omitted
