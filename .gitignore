@@ -90,3 +90,7 @@ ENV/
 
 # csv files
 res/tweets/*.csv
+
+# app cache
+*.twitter-auth
+*.twitter-cache-*
